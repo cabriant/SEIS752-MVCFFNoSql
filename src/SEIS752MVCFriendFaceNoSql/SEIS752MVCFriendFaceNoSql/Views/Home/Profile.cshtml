@@ -1,0 +1,96 @@
+﻿@model SEIS752MVCFriendFaceNoSql.Models.ProfileModel
+@{
+    ViewBag.Title = "Profile";
+}
+
+<div>
+	<a href="/home/index"><< Home Page</a>
+</div>
+
+@if (Model.ProfileUser == null)
+{
+	<h2>No User Found</h2>
+}
+else
+{
+	<div style="float: left; width: 28%; margin-right: 2%;">
+		<h2>@Model.ProfileUser.Name's Profile</h2>
+		<img src="@Model.ProfileUser.ImageUrl" />
+		<div>
+			<span style="font-weight: bold;">Name:</span> @Model.ProfileUser.Name
+		</div>
+		<div>
+			<span style="font-weight: bold;">Username:</span> @Model.ProfileUser.Username
+		</div>
+		<div>
+			<span style="font-weight: bold;">Latitude:</span> @Model.ProfileUser.Lat
+		</div>
+		<div>
+			<span style="font-weight: bold;">Longitude:</span> @Model.ProfileUser.Lon
+		</div>
+		<div>
+			<span style="font-weight: bold;">Antipodal Latitude:</span> @Model.ProfileUser.AntipodalLat
+		</div>
+		<div>
+			<span style="font-weight: bold;">Antipodal Longitude:</span> @Model.ProfileUser.AntipodalLon
+		</div>
+	</div>
+	<div style="float: right; width: 33%;">
+		<h2>Antipodal Users Halfway Around the World</h2>
+		<div>
+			@if (!Model.AntipodalUsers.Any())
+			{
+				<div>No antipodal users were found</div>
+			}
+			else
+			{
+				foreach (var antipodalUser in Model.AntipodalUsers)
+				{
+					<div style="margin-bottom: 10px;">
+						<div>
+							<span style="font-weight: bold;">Name:</span> <a href="/home/profile/@antipodalUser.User.Username">@antipodalUser.User.Name (@antipodalUser.User.Username)</a>
+						</div>
+						<div>
+							<span style="font-weight: bold;">Distance:</span> @antipodalUser.Distance.ToString("N") Miles
+						</div>
+						<div>
+							<span style="font-weight: bold;">Latitude:</span> @antipodalUser.User.Lat
+						</div>
+						<div>
+							<span style="font-weight: bold;">Longitude:</span> @antipodalUser.User.Lon
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</div>
+	<div style="float: right; width: 30%; margin-right: 3%;">
+		<h2>Users Nearby</h2>
+		<div>
+			@if (!Model.NearbyUsers.Any())
+			{
+				<div>No nearby users were found</div>
+			}
+			else
+			{
+				foreach (var nearbyUser in Model.NearbyUsers)
+				{
+					<div style="margin-bottom: 10px;">
+						<div>
+							<span style="font-weight: bold;">Name:</span> <a href="/home/profile/@nearbyUser.User.Username">@nearbyUser.User.Name (@nearbyUser.User.Username)</a>
+						</div>
+						<div>
+							<span style="font-weight: bold;">Distance:</span> @nearbyUser.Distance.ToString("N") Miles
+						</div>
+						<div>
+							<span style="font-weight: bold;">Latitude:</span> @nearbyUser.User.Lat
+						</div>
+						<div>
+							<span style="font-weight: bold;">Longitude:</span> @nearbyUser.User.Lon
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</div>
+}

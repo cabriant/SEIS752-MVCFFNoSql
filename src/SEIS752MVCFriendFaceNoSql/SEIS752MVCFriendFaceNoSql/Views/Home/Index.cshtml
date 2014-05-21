@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "FriendFace Home Page";
+}
+
+<h2>Welcome</h2>
+
+<div style="margin-bottom: 20px;">
+	Seed Couchbase NoSQL document store
+	<div>
+		<a href="/home/seed">Seed</a>
+	</div>
+</div>
+<div>
+	Search for a username in the field below.
+</div>
+<div>
+	<form class="search-form">
+		<input type="text" name="searchName" class="search-name" placeholder="Username..." />
+		<div>
+			<button type="button" class="search-button">Search</button>
+			<button type="button" class="clear-button">Clear</button>
+		</div>
+	</form>
+</div>
+
+<div class="search-results" style="display: none;">
+	<h2>Search Results</h2>
+	
+	<div class="search-results-container">
+		
+	</div>
+	
+	<div class="search-result-template-container" style="display: none;">
+		<div style="margin-bottom: 5px;">
+			<a href="" class="result-name"></a>
+		</div>
+	</div>
+</div>
+
+@section scripts
+{
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			$(".search-button").on('click', function() {
+				$(".search-results-container").empty();
+
+				var searchName = $(".search-name").val();
+				if (searchName != null && searchName != "") {
+					$.getJSON('/home/search?searchName=' + searchName, function(data) {
+						if (data.length > 0) {
+							$(".search-results").css('display', 'block');
+							$(data).each(function() {
+								var newResult = $(".search-result-template-container").children().clone();
+								$(newResult).find(".result-name").html(this.Name + ' (' + this.Username + ')');
+								$(newResult).find(".result-name").attr('href', '/home/profile/' + this.Username);
+								$(".search-results-container").append(newResult);
+							});
+						} else {
+							$(".search-results").css('display', 'none');
+							alert("No results found.");
+						}
+					});
+				} else {
+					$(".search-results").css('display', 'none');
+					alert("You must provide a search term");
+				}
+			});
+
+			$(".clear-button").on('click', function() {
+				$(".search-results").css('display', 'none');
+				$(".search-results-container").empty();
+				$(".search-name").val("");
+			});
+
+			$(".search-form").on('submit', function(e) {
+				e.preventDefault();
+				$(".search-button").click();
+			});
+		});
+
+	</script>
+}
